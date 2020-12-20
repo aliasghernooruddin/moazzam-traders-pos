@@ -1,0 +1,12 @@
+.chip {
+  width: 100%;
+}
+
+.end {
+  text-align: end !important;
+}
+
+.warning {
+  color: red;
+  font-size: 11px;
+}
