@@ -22,19 +22,14 @@ module.exports.register = function (req, res) {
 
   user.save(function (err, data) {
     if (data) {
-      var token;
-      token = user.generateJwt();
-      res.status(200);
-      res.json({
-        "token": token
-      });
+      res.status(200).json({ success: true, message: "User created Successfully!" });
     }
     else {
       if (err.name === 'MongoError' && err.code === 11000) {
         // Duplicate username
-        return res.status(422).send({ succes: false, message: 'User already exist!' });
+        return res.status(422).json({ succes: false, type: "user_exists", message: 'User already exist!' });
       }
-      res.status(422).send({ success: false, message: err.name });
+      res.status(422).json({ success: false, type: err.name, message: 'Failed. Try again' });
     }
   });
 
@@ -61,9 +56,9 @@ module.exports.login = function (req, res) {
     // If a user is found
     if (user) {
       token = user.generateJwt();
-      res.status(200);
+      res.status(200)
       res.json({
-        "token": token
+        token: token
       });
     } else {
       // If user is not found
@@ -72,3 +67,10 @@ module.exports.login = function (req, res) {
   })(req, res);
 
 };
+
+
+module.exports.users = function (req, res) {
+  User.find({}, { hash: 0, salt: 0 }).exec(function (err, user) {
+    res.status(200).json({ status: true, data: user });
+  });
+}

@@ -1,4 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { PostResponse } from 'app/models/post-response';
+import { UserLogin } from 'app/models/user-login.model';
+import { AlertService } from 'app/services/alert.service';
+import { LoginService } from 'app/services/login.service';
 
 declare var $: any;
 
@@ -11,7 +17,11 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     test: Date = new Date();
 
-    constructor() { } 
+    loginForm: FormGroup
+
+    user = new UserLogin()
+
+    constructor(private loginService: LoginService, private router: Router, private alert: AlertService) { }
 
     checkFullPageBackgroundImage() {
         var $page = $('.full-page');
@@ -23,7 +33,26 @@ export class LoginComponent implements OnInit, OnDestroy {
         }
     };
 
+    onSubmit() {
+        this.user.email = this.loginForm.get('email').value
+        this.user.password = this.loginForm.get('password').value
+        this.loginService.login(this.user).subscribe(res => {
+            if (res) {
+                localStorage.setItem('token', res.token)
+                this.router.navigateByUrl('/dashboard/main')
+            }
+        }, (err: PostResponse) => {
+            console.log(err)
+            this.alert.openSnackBar(err.error.message)
+        })
+    }
+
     ngOnInit() {
+        this.loginForm = new FormGroup({
+            email: new FormControl(null, [Validators.email, Validators.required]),
+            password: new FormControl(null, Validators.required),
+        });
+
         this.checkFullPageBackgroundImage();
         var body = document.getElementsByTagName('body')[0];
         body.classList.add('login-page');
@@ -38,5 +67,6 @@ export class LoginComponent implements OnInit, OnDestroy {
         var body = document.getElementsByTagName('body')[0];
         body.classList.remove('login-page');
     }
+
 
 }

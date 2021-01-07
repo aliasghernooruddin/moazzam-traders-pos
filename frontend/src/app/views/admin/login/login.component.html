@@ -11,7 +11,7 @@
     <div class="content">
       <div class="container">
         <div class="col-lg-4 col-md-6 ml-auto mr-auto">
-          <form class="form" method="" action="">
+          <form class="form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
             <div class="card card-login">
               <div class="card-header ">
                 <div class="card-header ">
@@ -25,8 +25,8 @@
                       <i class="nc-icon nc-single-02"></i>
                     </span>
                   </div>
-                  <input type="text" class="form-control" placeholder="First Name..." (focus)="focus=true"
-                    (blur)="focus=false">
+                  <input type="text" formControlName="email" class="form-control" placeholder="Email"
+                    (focus)="focus=true" (blur)="focus=false">
                 </div>
                 <div class="input-group" [ngClass]="{'input-group-focus':focus1===true}">
                   <div class="input-group-prepend">
@@ -34,13 +34,13 @@
                       <i class="nc-icon nc-key-25"></i>
                     </span>
                   </div>
-                  <input type="password" placeholder="Password" class="form-control" (focus)="focus1=true"
-                    (blur)="focus1=false">
+                  <input type="password" formControlName="password" placeholder="Password" class="form-control"
+                    (focus)="focus1=true" (blur)="focus1=false">
                 </div>
                 <br />
               </div>
               <div class="card-footer ">
-                <a href="javascript:void(0)" class="btn btn-warning btn-round btn-block mb-3">Login</a>
+                <button type="submit" [disabled]="loginForm.invalid" class="btn btn-warning btn-round btn-block mb-3">Login</button>
               </div>
             </div>
           </form>

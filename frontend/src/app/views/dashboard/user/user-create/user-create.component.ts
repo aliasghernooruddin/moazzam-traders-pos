@@ -1,7 +1,12 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { PostResponse } from 'app/models/post-response';
+import { UserCreate } from 'app/models/user-create.model';
+import { AlertService } from 'app/services/alert.service';
+import { StructureService } from 'app/services/structure.service';
+import { UserService } from 'app/services/user.service';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
@@ -16,23 +21,37 @@ export class UserCreateComponent implements OnInit {
   removable = true;
   separatorKeysCodes: number[] = [ENTER, COMMA];
   viewCtrl = new FormControl();
-  filteredSelectediews: Observable<string[]>;
-  selectedViews: string[] = [];
-  allViews: string[] = ['Supplier Create', 'Suppliers List', 'Lime', 'Orange', 'Strawberry'];
+  filteredSelectediews: Observable<Object>;
+  selectedViews = [];
+  tempViews;
+  allViews = [
+    {
+      name: 'Supplier Create',
+      child: false
+    },
+    {
+      name: 'Suppliers List',
+      child: true,
+      update: false,
+      delete: false,
+    }
+  ]
+  structuresDropdown = [];
 
   @ViewChild('viewInput') viewInput: ElementRef<HTMLInputElement>;
 
-
   addUserForm: FormGroup
 
-  constructor() {
+  user = new UserCreate()
+
+  constructor(private userService: UserService, private alert: AlertService, private structureService: StructureService) {
     this.filteredSelectediews = this.viewCtrl.valueChanges.pipe(
       startWith(null),
-      map((view: string | null) => view ? this._filter(view) : this.allViews.slice()));
+      map((view) => view ? this._filter(view) : this.allViews.slice()));
   }
 
 
-  remove(view: string): void {
+  remove(view): void {
     const index = this.selectedViews.indexOf(view);
 
     if (index >= 0) {
@@ -42,7 +61,7 @@ export class UserCreateComponent implements OnInit {
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
-    this.selectedViews.push(event.option.viewValue);
+    this.selectedViews.push(event.option.value);
 
     const index = this.allViews.indexOf(event.option.value);
 
@@ -54,28 +73,57 @@ export class UserCreateComponent implements OnInit {
     this.viewCtrl.setValue(null);
   }
 
-  private _filter(value: string): string[] {
+  private _filter(value) {
+    if (value.name) {
+      value = value.name
+    }
     const filterValue = value.toLowerCase();
 
-    return this.allViews.filter(view => view.toLowerCase().indexOf(filterValue) === 0);
+    return this.allViews.filter(view => view.name.toLowerCase().indexOf(filterValue) === 0);
   }
 
-  onSubmit() {
-    console.log(this.addUserForm);
-    console.log(this.addUserForm.get('email').value);
+  onSubmit(formDirective: FormGroupDirective) {
+    this.user = this.addUserForm.value;
+    this.user.views = this.selectedViews;
+    this.user.roles = ['user']
+    this.userService.createUser(this.user).subscribe(
+      data => {
+        this.alert.openSnackBar(data.message)
+        formDirective.resetForm()
+        this.allViews = Object.create(this.tempViews)
+        this.selectedViews = []
+      }, (err: PostResponse) => {
+        console.log(err)
+        this.alert.openSnackBar(err.error.message)
+      }
+    )
+  }
+
+  initializeForm() {
+    this.addUserForm = new FormGroup({
+      email: new FormControl(null, [Validators.email, Validators.required]),
+      firstName: new FormControl(null, Validators.required),
+      lastName: new FormControl(null, Validators.required),
+      address: new FormControl(null, Validators.required),
+      city: new FormControl('Karachi', Validators.required),
+      country: new FormControl('Pakistan', Validators.required),
+      phoneNumber: new FormControl(null, Validators.required),
+      status: new FormControl('true', Validators.required),
+      structureId: new FormControl(null, Validators.required),
+      password: new FormControl(null, [Validators.required, Validators.minLength(6)])
+    });
+  }
+
+  getStructureDropdown() {
+    this.structureService.getStructureDropdown().subscribe(res => {
+      this.structuresDropdown = res.data
+    })
   }
 
 
   ngOnInit() {
-    this.addUserForm = new FormGroup({
-      email: new FormControl(null, [Validators.email, Validators.required]),
-      fname: new FormControl(null, Validators.required),
-      lname: new FormControl(null, Validators.required),
-      address: new FormControl(null, Validators.required),
-      city: new FormControl('Karachi', Validators.required),
-      country: new FormControl('Pakistan', Validators.required),
-      mobNumber: new FormControl(null, Validators.required),
-      password: new FormControl(null, [Validators.required, Validators.minLength(6)])
-    });
+    this.tempViews = Object.assign({}, this.allViews);
+    this.initializeForm();
+    this.getStructureDropdown();
   }
 }

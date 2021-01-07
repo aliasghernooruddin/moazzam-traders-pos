@@ -10,3 +10,11 @@
   color: red;
   font-size: 11px;
 }
+
+.mat-form-field {
+  width: 100%;
+}
+
+.table-responsive {
+  overflow: auto !important;
+}

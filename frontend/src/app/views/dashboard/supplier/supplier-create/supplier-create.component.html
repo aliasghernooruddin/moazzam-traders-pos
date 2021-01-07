@@ -7,12 +7,12 @@
           <h5 class="title">Add Supplier</h5>
         </div>
         <div class="card-body">
-          <form>
+          <form [formGroup]="addSupplierForm" (ngSubmit)="onSubmit()">
             <div class="row">
               <div class="col-md-6 ">
                 <div class="form-group">
                   <label>Company</label>
-                  <input type="text" class="form-control" >
+                  <input type="text" class="form-control">
                 </div>
               </div>
               <div class="col-md-6 ">
@@ -64,10 +64,17 @@
                 </div>
               </div>
             </div>
+            <div class="row">
+              <div class="col-md-6  warning">
+                *All fields are required
+              </div>
+              <div class="col-md-6 end">
+                <button mat-flat-button type="submit" [disabled]="addSupplierForm.invalid" color="primary">Create</button>
+              </div>
+            </div>
           </form>
         </div>
       </div>
     </div>
   </div>
-</div> 
-
+</div>

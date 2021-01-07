@@ -7,69 +7,87 @@
                     <h5 class="title">Add User</h5>
                 </div>
                 <div class="card-body">
-                    <form [formGroup]="addUserForm" (ngSubmit)="onSubmit()">
+                    <form [formGroup]="addUserForm" #formDirective="ngForm" (ngSubmit)="onSubmit(formDirective)">
                         <div class="row">
-                            <div class="col-md-6 ">
-                                <div class="form-group">
-                                    <label>Company (disabled)</label>
-                                    <input type="text" disabled="" value="Al Moazzam Traders" class="form-control">
-                                </div>
+                            <div class="col-md-4">
+                                <mat-form-field appearance="fill">
+                                    <mat-label>Company (disabled)</mat-label>
+                                    <input matInput disabled value="Al Moazzam Traders">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-4">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Status</mat-label>
+                                    <mat-select formControlName="status">
+                                        <mat-option value="true"> Enable </mat-option>
+                                        <mat-option value="false"> Disable </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-4">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Structure</mat-label>
+                                    <mat-select formControlName="structureId">
+                                        <mat-option *ngFor="let structure of structuresDropdown" [value]="structure._id">
+                                            {{structure.name}} </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6 ">
-                                <div class="form-group">
-                                    <label>First Name</label>
-                                    <input type="text" class="form-control" formControlName="fname">
-                                </div>
+                            <div class="col-md-6">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>First Name</mat-label>
+                                    <input matInput formControlName="firstName">
+                                </mat-form-field>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Last Name</label>
-                                    <input type="text" class="form-control" formControlName="lname">
-                                </div>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Last Name</mat-label>
+                                    <input matInput formControlName="lastName">
+                                </mat-form-field>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="form-group">
-                                    <label>Address</label>
-                                    <input type="text" class="form-control" formControlName="address">
-                                </div>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Address</mat-label>
+                                    <input matInput formControlName="address">
+                                </mat-form-field>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-4 ">
-                                <div class="form-group">
-                                    <label>City</label>
-                                    <input type="text" class="form-control" formControlName="city">
-                                </div>
+                            <div class="col-md-4">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>City</mat-label>
+                                    <input matInput formControlName="city">
+                                </mat-form-field>
                             </div>
-                            <div class="col-md-4 ">
-                                <div class="form-group">
-                                    <label>Country</label>
-                                    <input type="text" class="form-control" formControlName="country">
-                                </div>
+                            <div class="col-md-4">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Country</mat-label>
+                                    <input matInput formControlName="country">
+                                </mat-form-field>
                             </div>
-                            <div class="col-md-4 ">
-                                <div class="form-group">
-                                    <label>Mobile Number</label>
-                                    <input type="tel" class="form-control" formControlName="mobNumber">
-                                </div>
+                            <div class="col-md-4">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Mobile Number</mat-label>
+                                    <input matInput formControlName="phoneNumber">
+                                </mat-form-field>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6 ">
-                                <div class="form-group">
-                                    <label>Email address</label>
-                                    <input type="email" class="form-control" formControlName="email">
-                                </div>
+                            <div class="col-md-6">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Email Address</mat-label>
+                                    <input type="email" matInput formControlName="email">
+                                </mat-form-field>
                             </div>
-                            <div class="col-md-6 ">
-                                <div class="form-group">
-                                    <label>Password</label>
-                                    <input type="password" class="form-control" formControlName="password">
-                                </div>
+                            <div class="col-md-6">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Password</mat-label>
+                                    <input type="password" matInput formControlName="password">
+                                </mat-form-field>
                             </div>
                         </div>
                         <div class="row">
@@ -80,7 +98,7 @@
                                         <mat-chip-list #chipList>
                                             <mat-chip *ngFor="let view of selectedViews" [selectable]="selectable"
                                                 [removable]="removable" (removed)="remove(view)">
-                                                {{view}}
+                                                {{view.name}}
                                                 <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
                                             </mat-chip>
                                             <input #viewInput [formControl]="viewCtrl" [matAutocomplete]="auto"
@@ -90,10 +108,55 @@
                                         <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
                                             <mat-option *ngFor="let filteredView of filteredSelectediews | async"
                                                 [value]="filteredView">
-                                                {{filteredView}}
+                                                {{filteredView.name}}
                                             </mat-option>
                                         </mat-autocomplete>
                                     </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card-header">
+                                    <h4 class="card-title">Roles & Permissions</h4>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead class="text-primary">
+                                            <th class="text-center">
+                                                #
+                                            </th>
+                                            <th class="text-center">
+                                                View
+                                            </th>
+                                            <th class="text-center">
+                                                Update
+                                            </th>
+                                            <th class="text-center">
+                                                Delete
+                                            </th>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let view of selectedViews">
+                                                <ng-container *ngIf="view['child']">
+                                                    <td class="text-center">
+                                                        1
+                                                    </td>
+                                                    <td class="text-center">
+                                                        {{view['name']}}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <mat-checkbox [ngModelOptions]="{standalone: true}"
+                                                            [(ngModel)]="view['update']"></mat-checkbox>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <mat-checkbox [ngModelOptions]="{standalone: true}"
+                                                            [(ngModel)]="view['delete']"></mat-checkbox>
+                                                    </td>
+                                                </ng-container>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>

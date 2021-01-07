@@ -14,11 +14,14 @@ var userSchema = new mongoose.Schema({
   city: { type: String, required: true },
   country: { type: String, required: true },
   phoneNumber: { type: String, required: true },
-  views: Object,
+  structureId: { type: String, required: true },
+  status: { type: Boolean, required: true },
+  roles: { type: Array, required: true },
   creation_date: {
     type: Date,
     default: Date.now
   },
+  views: Array,
   hash: String,
   salt: String
 },
@@ -44,7 +47,7 @@ userSchema.methods.generateJwt = function () {
     email: this.email,
     name: this.name,
     exp: parseInt(expiry.getTime() / 1000),
-  }, "MY_SECRET"); 
+  }, "MY_SECRET");
 };
 
 mongoose.model('User', userSchema);

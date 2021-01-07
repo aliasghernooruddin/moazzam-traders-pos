@@ -1,1 +1,51 @@
-<p>structures works!</p>
+<div class="main-content">
+    <div class="main-content">
+        <div class="row">
+            <div class="col-md-12">
+
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Structures</h4>
+                    </div>
+                    <div class="card-body">
+                        <table id="datatable" class="table table-bordered" cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Address</th>
+                                    <th>City</th>
+                                    <th>Country</th>
+                                    <th class="disabled-sorting text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of users">
+                                    <td>{{row.name}}</td>
+                                    <td>{{row.type}}</td>
+                                    <td>{{row.address}}</td>
+                                    <td>{{row.city}}</td>
+                                    <td>{{row.country}}</td>
+                                    <td class="text-center">
+                                        <button mat-icon-button color="primary">
+                                            <mat-icon>edit</mat-icon>
+                                        </button>
+                                        <button mat-icon-button color="warn">
+                                            <mat-icon>delete</mat-icon>
+                                        </button>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- end content-->
+                </div>
+                <!--  end card  -->
+            </div>
+            <!-- end col-md-12 -->
+        </div>
+        <!-- end row -->
+    </div>
+
+</div>
