@@ -27,7 +27,7 @@ module.exports.register = function (req, res) {
     else {
       if (err.name === 'MongoError' && err.code === 11000) {
         // Duplicate username
-        return res.status(422).json({ succes: false, type: "user_exists", message: 'User already exist!' });
+        return res.status(422).json({ success: false, type: "user_exists", message: 'User already exist!' });
       }
       res.status(422).json({ success: false, type: err.name, message: 'Failed. Try again' });
     }
@@ -67,7 +67,6 @@ module.exports.login = function (req, res) {
   })(req, res);
 
 };
-
 
 module.exports.users = function (req, res) {
   User.find({}, { hash: 0, salt: 0 }).exec(function (err, user) {

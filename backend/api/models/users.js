@@ -50,4 +50,4 @@ userSchema.methods.generateJwt = function () {
   }, "MY_SECRET");
 };
 
-mongoose.model('User', userSchema);
+mongoose.model('User', userSchema, 'users');

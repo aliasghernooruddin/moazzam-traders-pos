@@ -12,14 +12,12 @@ module.exports.add = function (req, res) {
         }
         else {
             if (err.name === 'MongoError' && err.code === 11000) {
-                return res.status(422).json({ succes: false, type: "structure_exists", message: 'Structure already exist!' });
+                return res.status(422).json({ success: false, type: "entry_exists", message: 'Structure already exist!' });
             }
             res.status(422).json({ success: false, type: err.name, message: 'Failed. Try again' });
         }
     });
-
 };
-
 
 module.exports.get = function (req, res) {
     Structure.find().exec(function (err, data) {

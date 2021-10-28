@@ -20,4 +20,4 @@ var structureSchema = new mongoose.Schema({
 );
 
 
-mongoose.model('Structure', structureSchema);
+mongoose.model('Structure', structureSchema, 'structures');
