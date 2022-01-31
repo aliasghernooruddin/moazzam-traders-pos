@@ -19,7 +19,7 @@ var orderSchema = new mongoose.Schema(
         deliveryDate: { type: Date },
         orderDate: { type: Date, default: Date.now() },
         delivered: { type: Boolean, default: false },
-        advanced: { type: Number, default: 0 },
+        advance: { type: Number, default: 0 },
     },
     { strict: true }
 );

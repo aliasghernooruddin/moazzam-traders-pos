@@ -1,12 +1,13 @@
 const mongoose = require('mongoose');
 var gracefulShutdown;
-var dbURI = 'mongodb://localhost:27017/pos-moazzam-traders';
+// var dbURI = 'mongodb://localhost:27017/pos-moazzam-traders';
+var dbURI = 'mongodb+srv://admin:admin@cluster0.6h9lt.mongodb.net/moazzam-traders'
 
 if (process.env.NODE_ENV === 'production') {
   dbURI = process.env.MONGOLAB_URI;
 }
 
-mongoose.connect(dbURI, { useMongoClient: true });
+mongoose.connect(dbURI);
 
 // CONNECTION EVENTS
 mongoose.connection.on('connected', function () {

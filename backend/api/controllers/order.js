@@ -30,11 +30,11 @@ module.exports.getOrder = function (req, res) {
 
 module.exports.deleteOrder = function (req, res) {
     let _id = req.params['id']
-    Order.findOne({ _id, delivered: false }).remove().exec(function (err, data) {
-        if (data.result.n == 0) {
+    Order.findOne({ _id, delivered: false }).deleteOne().exec(function (err, data) {
+        if (data.deletedCount != 1) {
             return res.status(400).json({ status: false, message: "Order Already Delivered" });
         }
-        res.status(200).json({ status: true, message: data.result.n + " Order Deleted" });
+        res.status(200).json({ status: true, message: data.deletedCount + " Order Deleted" });
     });
 }
 
